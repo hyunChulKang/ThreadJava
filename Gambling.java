@@ -1,69 +1,103 @@
 package kr.or.ddit.basic;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Gambling {
-	static String strRank ="";
-	public static void main(String[] args) {
-		GameHores[] plays =new GameHores[] {
-				new GameHores("1"),
-				new GameHores("2"),
-				new GameHores("3"),
-				new GameHores("4"),
-				new GameHores("5"),
-				new GameHores("6"),
-				new GameHores("7"),
-				new GameHores("8"),
-				new GameHores("9"),
-				new GameHores("10"),
-				
-		};
-		for(int i=0; i<plays.length; i++) {
-			plays[i].start();
-			System.out.println();
-		}
-		for(GameHores gh : plays) {
-			try {
-				gh.join();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+		static String strRank ="";
+		volatile static int rank;
+		public static void main(String[] args) {
+			List<Horse> list = new ArrayList<>();
+					
+					list.add(new Horse("1번 말 "));
+					list.add(new Horse("2번 말 "));
+					list.add(new Horse("3번 말 "));
+					list.add(new Horse("4번 말 "));
+					list.add(new Horse("5번 말 "));
+					list.add(new Horse("6번 말 "));
+					list.add(new Horse("7번 말 "));
+					list.add(new Horse("8번 말 "));
+					list.add(new Horse("9번 말 "));
+					list.add(new Horse("10번 말 "));
+			
+			for(int i=0; i<list.size(); i++) {
+				list.get(i).start();
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			for(Horse dc : list) {
+				try {
+					dc.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			Collections.sort(list);
+			for(Horse hr : list) {
+				System.out.println(hr.getRank() + "등 " +hr.getHorse());
+				System.out.println();
 			}
 			System.out.println("경기 끝..");
-			System.out.println("--------------------------------------------------");
-			System.out.println();
-			System.out.println("경기 결과");
-			System.out.println("순서: " + strRank);
 		}
 	}
-}
-
-class GameHores extends Thread {
-	private String name;
-	private int cnt=1;
-	
-	public GameHores(String name) {
-		this.name = name;
-	}
-	@Override
-	public void run() {
+	class Horse extends Thread implements Comparable<Horse> {
+		private String horse;
+		private int rank2;
 		
-		for(int i =1; i<=50; i++) {
-			for(int j =1; j<=50; i++) {
-				if(cnt==i) {
-					System.out.print(">");	
-				}else {
-					System.out.print("-");
-			}
-			}
-			cnt++;
-			
-			try {
-				
-				Thread.sleep((int)(Math.random()*10000));
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}		
+		
+		//생성자
+		public Horse(String horse) {
+			this.horse = horse;
+
 		}
-		System.out.println(name + "출력 끝...");
-		Gambling.strRank += name + " ";
+		
+		public String getHorse() {
+			return horse;
+		}
+
+
+		public void setHorse(String horse) {
+			this.horse = horse;
+		}
+
+		public int getRank() {
+			return rank2;
+		}
+
+		public void setRank(int rank) {
+			this.rank2 = rank;
+		}
+
+		@Override
+		public void run() {
+			
+			for(int i=0; i<10; i++) {
+				System.out.print(horse);
+				for(int j =0; j<10; j++) {
+					if(i==j) {
+						System.out.print(">");
+					}
+					System.out.print("-");
+				}
+				System.out.println();
+				System.out.println();
+				try {
+					//sleep()메서드의 값을 200~500사이의 난수로 한다
+					Thread.sleep((int) (Math.random()*501+200));
+					}catch(InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			setRank(++Gambling.rank);
+		}
+
+		@Override
+		public int compareTo(Horse o) {
+			return Integer.compare(this.rank2,o.rank2);
+		}
 	}
-}
