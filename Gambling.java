@@ -76,9 +76,9 @@ public class Gambling {
 		@Override
 		public void run() {
 			
-			for(int i=0; i<10; i++) {
+			for(int i=0; i<50; i++) {
 				System.out.print(horse);
-				for(int j =0; j<10; j++) {
+				for(int j =0; j<50; j++) {
 					if(i==j) {
 						System.out.print(">");
 					}
@@ -88,7 +88,7 @@ public class Gambling {
 				System.out.println();
 				try {
 					//sleep()메서드의 값을 200~500사이의 난수로 한다
-					Thread.sleep((int) (Math.random()*501+200));
+					Thread.sleep((int) (Math.random()*800+200));
 					}catch(InterruptedException e) {
 					e.printStackTrace();
 				}
